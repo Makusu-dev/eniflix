@@ -1,0 +1,21 @@
+body {
+        background: linear-gradient(#0b0d4c, #274a2d);
+        background-attachment: fixed;
+        background-position: center center;
+        background-size: cover;    color: #FFF;
+        font-family: 'Roboto', sans-serif;
+        padding: 10px;
+}
+nav ul {
+        display: flex;
+        flex-direction:row;
+        list-style: none;
+        gap: 2em;
+
+}
+
+nav li a {
+        text-decoration: none;
+        color: inherit;
+}
+
