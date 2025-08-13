@@ -13,4 +13,11 @@ final class MainController extends AbstractController
     {
         return $this->render('main/home.html.twig');
     }
+
+    #[Route('/', name: 'catalog')]
+    public function catalog(): Response
+    {
+        return $this->render('');
+    }
+
 }
