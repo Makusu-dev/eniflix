@@ -11,8 +11,43 @@ nav ul {
         flex-direction:row;
         list-style: none;
         gap: 2em;
+}
+
+nav a:link, a:visited {
+        background-color: rgba(58, 177, 123, 0);
+}
+
+  a:link, a:visited {
+        background-color: #3ab17b;
+        color: white;
+        padding: 14px 25px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        border-radius: 5px;
+}
+
+  a:hover, a:active {
+        background-color: #cfad58;
+}
+
+table {
+        border-collapse: collapse;
+}
+
+th, td {
+        text-align: left;
+        padding: 8px;
+
 
 }
+
+tr:nth-child(even) {
+        background-color: rgba(134, 255, 141, 0.13);
+        border: 1px solid black;
+        }
+
+
 
 nav li a {
         text-decoration: none;

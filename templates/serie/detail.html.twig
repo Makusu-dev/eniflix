@@ -1,0 +1,8 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }} -Catalogue{% endblock %}
+
+{% block body %}
+   <h2>Serie: {{ serie.name }}</h2>
+    <p>{{ serie.overview }}</p>
+{% endblock %}
