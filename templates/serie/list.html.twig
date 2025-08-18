@@ -12,28 +12,37 @@
         {% endif %}
         </div>
     </section><br>
-    <table>
-        <tr>
-            <th>Id</th>
-            <th>Nom</th>
-            <th>Genre</th>
-            <th>Status</th>
-            <th>Vote</th>
-            <th>Popularity</th>
-            <th>First Air Date</th>
-            <th></th>
-        </tr>
+{#    <table>#}
+{#        <tr>#}
+{#            <th>Id</th>#}
+{#            <th>Nom</th>#}
+{#            <th>Genre</th>#}
+{#            <th>Status</th>#}
+{#            <th>Vote</th>#}
+{#            <th>Popularity</th>#}
+{#            <th>First Air Date</th>#}
+{#            <th></th>#}
+{#        </tr>#}
+{#        {% for serie in series %}#}
+{#            <tr>#}
+{#                <td>{{ serie.id }}</td>#}
+{#                <td>{{ serie.name }}</td>#}
+{#                <td>{{ serie.genres }}</td>#}
+{#                <td>{{ serie.status }}</td>#}
+{#                <td>{{ serie.vote }}</td>#}
+{#                <td>{{ serie.popularity }}</td>#}
+{#                <td>{{ serie.firstAirDate|date('d/m/Y') }}</td>#}
+{#                <td><a href="{{ path('serie_detail', {id: serie.id}) }}">Détails</a></td>#}
+{#            </tr>#}
+{#        {% endfor %}#}
+{#    </table>#}
+    <section class="series-list">
         {% for serie in series %}
-            <tr>
-                <td>{{ serie.id }}</td>
-                <td>{{ serie.name }}</td>
-                <td>{{ serie.genres }}</td>
-                <td>{{ serie.status }}</td>
-                <td>{{ serie.vote }}</td>
-                <td>{{ serie.popularity }}</td>
-                <td>{{ serie.firstAirDate|date('d/m/Y') }}</td>
-                <td><a href="{{ path('serie_detail', {id: serie.id}) }}">Détails</a></td>
-            </tr>
+            <a href="{{ path('serie_detail', { id : serie.id }) }}">
+                <img src="{{ asset('uploads/posters/series/' ~ serie.poster) }}" width="250px" alt="{{ 'Poster de ' ~ serie.name }}" loading="lazy">
+            </a>
+        {% else %}
+            <p>Pas de série</p>
         {% endfor %}
-    </table>
+    </section>
 {% endblock %}

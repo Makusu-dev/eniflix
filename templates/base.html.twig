@@ -11,7 +11,6 @@
             {% block importmap %}{{ importmap('app') }}{% endblock %}
         {% endblock %}
     </head>
-    <body>
     <img src="{{ asset('images/logo.png') }}" alt="logo du site, le mot Série dans une jolie typographie" />
     <nav>
         <ul>
@@ -20,5 +19,4 @@
         </ul>
     </nav>
         {% block body %}{% endblock %}
-    </body>
 </html>
