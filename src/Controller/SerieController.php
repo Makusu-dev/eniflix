@@ -2,15 +2,21 @@
 
 namespace App\Controller;
 
+use App\Entity\Serie;
+use App\Form\SerieType;
 use App\Repository\SerieRepository;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
+#[Route('/serie', name: 'serie')]
 final class SerieController extends AbstractController
 {
-    #[Route('/serie/list/{page}', name: 'serie_list', requirements: ['page' => '\d+'], defaults: ['page' => 1], methods: ['GET'])]
+    #[Route('/list/{page}', name: '_list', requirements: ['page' => '\d+'], defaults: ['page' => 1], methods: ['GET'])]
 //    le ParameterbagInterface va aller chercher dans le fichier config/services.yaml où l'on a ajouter le
 //      le nb d'entrées par page
     public function list(SerieRepository $serieRepository, int $page, ParameterBagInterface $parameterBag): Response
@@ -49,7 +55,7 @@ final class SerieController extends AbstractController
             ]);
     }
 
-    #[Route('/serie/detail/{id}', name: 'serie_detail', requirements: ['id' => '\d+'], methods: ['GET'])]
+    #[Route('/detail/{id}', name: '_detail', requirements: ['id' => '\d+'], methods: ['GET'])]
     public function detail(SerieRepository $serieRepository, int $id): Response
     {
         $serie = $serieRepository->find($id);
@@ -59,7 +65,7 @@ final class SerieController extends AbstractController
         );
     }
 
-    #[Route('serie/custom', name: 'serie_custom', requirements: ['id' => '\d+'], methods: ['GET'])]
+    #[Route('custom', name: '_custom', requirements: ['id' => '\d+'], methods: ['GET'])]
     public function listCustom(SerieRepository $serieRepository): Response
     {
         $serieCustom = $serieRepository->findSerieCustom(400, 5);
@@ -68,5 +74,25 @@ final class SerieController extends AbstractController
             'serieCustom' => $serieCustom,
         ]);
     }
+    #[Route('/create', name: '_create')]
+    public function create(Request $request, EntityManagerInterface $em): Response
+    {
+        $serie = new Serie();
+        $form = $this->createForm(SerieType::class, $serie);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+//            dd($serie);
+            $serie->setDateCreated(new \DateTime());;
+            $em->persist($serie);
+            $em->flush();
+            $this->render('serie_detail', ['id'=>$serie->getId()]);
+
+
+        }
+
+        return $this->render('serie/edit.html.twig',['serie_form' => $form]);
+    }
+
 
 }
