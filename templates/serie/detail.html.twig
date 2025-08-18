@@ -14,5 +14,7 @@
    <p>{{ serie.genres }}</p>
    <p>{{ serie.overview }}</p>
 
+    <a href="{{  path('serie_update',{'id':serie.id}) }}">Mettre à jour la série</a>
+
     </body>
 {% endblock %}

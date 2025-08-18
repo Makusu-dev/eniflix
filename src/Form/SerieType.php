@@ -39,8 +39,8 @@ class SerieType extends AbstractType
                 'widget' => 'single_text',
                 'required' => false,
             ])
-            ->add('backdrop', Type\FileType::class, ['required' => false, 'label' => 'Image de fond'])
-            ->add('poster', Type\FileType::class, ['required' => false, 'label' => 'Poster'])
+//            ->add('backdrop', Type\FileType::class, ['required' => false, 'label' => 'Image de fond'])
+//            ->add('poster', Type\FileType::class, ['required' => false, 'label' => 'Poster'])
             ->add('submit',Type\SubmitType::class, ['label' => 'Ajouter'])
         ;
     }

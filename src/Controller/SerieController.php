@@ -56,19 +56,17 @@ final class SerieController extends AbstractController
     }
 
     #[Route('/detail/{id}', name: '_detail', requirements: ['id' => '\d+'], methods: ['GET'])]
-    public function detail(SerieRepository $serieRepository, int $id): Response
+    public function detail(Serie $serie): Response
     {
-        $serie = $serieRepository->find($id);
         return $this->render('serie/detail.html.twig', [
-                'serie' => $serie,
-                'id' => $serie->getId(),]
-        );
+                'serie' => $serie
+        ]);
     }
 
     #[Route('custom', name: '_custom', requirements: ['id' => '\d+'], methods: ['GET'])]
     public function listCustom(SerieRepository $serieRepository): Response
     {
-        $serieCustom = $serieRepository->findSerieCustom(400, 5);
+        $serieCustom = $serieRepository->findSeriesCustom(400, 5);
         return $this->render('serie/custom.html.twig', [
 
             'serieCustom' => $serieCustom,
@@ -83,12 +81,25 @@ final class SerieController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 //            dd($serie);
-            $serie->setDateCreated(new \DateTime());;
             $em->persist($serie);
             $em->flush();
-            $this->render('serie_detail', ['id'=>$serie->getId()]);
+            $this->addFlash('success', 'Une série a été enregistrée');
+            $this->redirectToRoute('serie_detail', ['id'=>$serie->getId()]);
+        }
 
+        return $this->render('serie/edit.html.twig',['serie_form' => $form]);
+    }
 
+    #[Route('/update/{id}', name: '_update', requirements: ['id' => '\d+'])]
+    public function update(Serie $serie, Request $request, EntityManagerInterface $em): Response
+    {
+        $form = $this->createForm(SerieType::class, $serie);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->flush();
+            $this->addFlash('success', 'Une série a été mise à jour');
+            $this->redirectToRoute('serie_detail', ['id'=>$serie->getId()]);
         }
 
         return $this->render('serie/edit.html.twig',['serie_form' => $form]);
