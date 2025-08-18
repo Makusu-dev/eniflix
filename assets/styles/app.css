@@ -13,6 +13,14 @@ nav ul {
         gap: 2em;
 }
 
+.buttonContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 1em;
+
+}
+
 nav a:link, a:visited {
         background-color: rgba(58, 177, 123, 0);
 }

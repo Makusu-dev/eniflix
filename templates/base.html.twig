@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
     <head>
         <meta charset="UTF-8">
         <title>{% block title %}EniFlix{% endblock %}</title>
@@ -12,11 +12,11 @@
         {% endblock %}
     </head>
     <body>
-    <img src="{{ asset('images/logo.png') }}"/>
+    <img src="{{ asset('images/logo.png') }}" alt="logo du site, le mot Série dans une jolie typographie" />
     <nav>
         <ul>
             <li><a href="{{ path('home') }}">Home</a></li>
-            <li><a href="{{path('app_serie_list')}}">Catalogue</a></li>
+            <li><a href="{{path('serie_list')}}">Catalogue</a></li>
         </ul>
     </nav>
         {% block body %}{% endblock %}
