@@ -9,9 +9,11 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 #[Route('/serie', name: 'serie')]
 final class SerieController extends AbstractController
@@ -73,7 +75,7 @@ final class SerieController extends AbstractController
         ]);
     }
     #[Route('/create', name: '_create')]
-    public function create(Request $request, EntityManagerInterface $em): Response
+    public function create(Request $request, EntityManagerInterface $em, SluggerInterface $slugger): Response
     {
         $serie = new Serie();
         $form = $this->createForm(SerieType::class, $serie);
@@ -81,25 +83,65 @@ final class SerieController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 //            dd($serie);
+            $posterFile=$form->get('poster_file')->getData();
+            $backdropFile=$form->get('backdrop_file')->getData();
+
+            if($posterFile instanceof UploadedFile){
+                $name=$slugger->slug($serie->getName()).'-'.uniqid().'.'.$posterFile->guessExtension();
+                $posterFile->move('uploads/posters/series', $name);
+                $serie->setPoster($name);
+            }
+
+            if($backdropFile instanceof UploadedFile){
+                $name=$slugger->slug($serie->getName()).'-'.uniqid().'.'.$backdropFile->guessExtension();
+                $backdropFile->move('uploads/backdrops', $name);
+                $serie->setBackdrop($name);
+            }
+
+
             $em->persist($serie);
             $em->flush();
             $this->addFlash('success', 'Une série a été enregistrée');
-            $this->redirectToRoute('serie_detail', ['id'=>$serie->getId()]);
+            return $this->redirectToRoute('serie_detail', ['id'=>$serie->getId()]);
         }
+
 
         return $this->render('serie/edit.html.twig',['serie_form' => $form]);
     }
 
     #[Route('/update/{id}', name: '_update', requirements: ['id' => '\d+'])]
-    public function update(Serie $serie, Request $request, EntityManagerInterface $em): Response
+    public function update(Serie $serie, Request $request, EntityManagerInterface $em,SluggerInterface $slugger): Response
     {
         $form = $this->createForm(SerieType::class, $serie);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            $posterFile=$form->get('poster_file')->getData();
+            $backdropFile=$form->get('backdrop_file')->getData();
+
+            if($posterFile instanceof UploadedFile){
+                $name=$slugger->slug($serie->getName()).'-'.uniqid().'.'.$posterFile->guessExtension();
+                $posterFile->move('uploads/posters/series', $name);
+                if($serie->getPoster() && file_exists('uploads/posters/series/'.$serie->getPoster())){
+                    unlink('uploads/posters/series/'.$serie->getPoster());
+                }
+                $serie->setPoster($name);
+            }
+
+            if($backdropFile instanceof UploadedFile){
+                $name=$slugger->slug($serie->getName()).'-'.uniqid().'.'.$backdropFile->guessExtension();
+                $backdropFile->move('uploads/backdrops', $name);
+                if($serie->getBackdrop() && file_exists('uploads/backdrops/'.$serie->getBackdrop())){
+                    unlink('uploads/backdrops/'.$serie->getBackdrop());
+                }
+                $serie->setBackdrop($name);
+            }
+
+
             $em->flush();
             $this->addFlash('success', 'Une série a été mise à jour');
-            $this->redirectToRoute('serie_detail', ['id'=>$serie->getId()]);
+            return $this->redirectToRoute('serie_detail', ['id'=>$serie->getId()]);
         }
 
         return $this->render('serie/edit.html.twig',['serie_form' => $form]);
