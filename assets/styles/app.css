@@ -45,21 +45,19 @@ nav a:link, a:visited {
         background-color: #cfad58;
 }
 
-table {
-        border-collapse: collapse;
-}
+/*table {*/
+/*        border-collapse: collapse;*/
+/*}*/
 
 th, td {
         text-align: left;
         padding: 8px;
-
-
 }
 
-tr:nth-child(even) {
-        background-color: rgba(134, 255, 141, 0.13);
-        border: 1px solid black;
-        }
+/*tr:nth-child(even) {*/
+/*        background-color: rgba(134, 255, 141, 0.13);*/
+/*        border: 1px solid black;*/
+/*        }*/
 
 
 

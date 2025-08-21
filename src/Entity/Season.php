@@ -5,8 +5,11 @@ namespace App\Entity;
 use App\Repository\SeasonRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: SeasonRepository::class)]
+#[ORM\HasLifecycleCallbacks]
+#[UniqueEntity( fields: ['serie_id', 'number'])]
 class Season
 {
     #[ORM\Id]
@@ -30,6 +33,7 @@ class Season
     private ?int $tmdb_id = null;
 
     #[ORM\Column]
+
     private ?\DateTime $date_created = null;
 
     #[ORM\Column(nullable: true)]
@@ -104,14 +108,16 @@ class Season
         return $this;
     }
 
+
     public function getDateCreated(): ?\DateTime
     {
         return $this->date_created;
     }
 
-    public function setDateCreated(\DateTime $date_created): static
+    #[ORM\PrePersist]
+    public function setDateCreated(): static
     {
-        $this->date_created = $date_created;
+        $this->date_created = new \DateTime();
 
         return $this;
     }
@@ -121,9 +127,10 @@ class Season
         return $this->date_modified;
     }
 
-    public function setDateModified(?\DateTime $date_modified): static
+    #[ORM\PreUpdate]
+    public function setDateModified(): static
     {
-        $this->date_modified = $date_modified;
+        $this->date_modified = new \DateTime();
 
         return $this;
     }

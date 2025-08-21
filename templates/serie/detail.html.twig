@@ -14,6 +14,12 @@
    <p>{{ serie.genres }}</p>
    <p>{{ serie.overview }}</p>
 
+   <div>
+       {%  for season in serie.seasons %}
+           <a>Season {{ season.number }} </a><br>
+       {%  endfor %}<br>
+   </div>
+
     <a href="{{  path('serie_update',{'id':serie.id}) }}">Mettre à jour la série</a>
 
     </body>
