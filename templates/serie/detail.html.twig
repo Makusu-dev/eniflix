@@ -19,8 +19,9 @@
            <a>Season {{ season.number }} </a><br>
        {%  endfor %}<br>
    </div>
-
+    {%  if  is_granted('ROLE_ADMIN')%}
     <a href="{{  path('serie_update',{'id':serie.id}) }}">Mettre à jour la série</a>
+    {%  endif %}
 
     </body>
 {% endblock %}

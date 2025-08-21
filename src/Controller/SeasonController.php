@@ -9,11 +9,15 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\Security\Http\Attribute\CurrentUser;
+
 
 #[Route('/season', name: 'season')]
 final class SeasonController extends AbstractController
 {
     #[Route('/create', name: '_create')]
+    #[IsGranted('ROLE_MODERATOR')]
     public function index(Request $request, EntityManagerInterface $em): Response
     {
         $saison =New Season();
