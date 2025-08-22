@@ -28,8 +28,12 @@ security:
                 secret: '%kernel.secret%'
                 lifetime: 604800 # 1 week in seconds
                 path: /
-            custom_authenticators:
-                - App\Security\Authenticator
+#            custom_authenticators:
+#                - App\Security\Authenticator
+            user_checker: App\Security\UserChecker
+            login_throttling:
+              max_attempts: 3
+              interval: '3 minutes'
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall

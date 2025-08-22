@@ -7,6 +7,7 @@ use App\Form\SerieType;
 use App\Repository\SerieRepository;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
+use helper\FileUploader;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -73,7 +74,7 @@ final class SerieController extends AbstractController
 
     #[Route('/create', name: '_create')]
     #[ISGranted('ROLE_ADMIN')]
-    public function create(Request $request, EntityManagerInterface $em, SluggerInterface $slugger): Response
+    public function create(Request $request, EntityManagerInterface $em, FileUploader $fu,ParameterBagInterface $Parameters): Response
     {
         $serie = new Serie();
         $form = $this->createForm(SerieType::class, $serie);
@@ -84,16 +85,25 @@ final class SerieController extends AbstractController
             $posterFile=$form->get('poster_file')->getData();
             $backdropFile=$form->get('backdrop_file')->getData();
 
+
+
             if($posterFile instanceof UploadedFile){
-                $name=$slugger->slug($serie->getName()).'-'.uniqid().'.'.$posterFile->guessExtension();
-                $posterFile->move('uploads/posters/series', $name);
-                $serie->setPoster($name);
+                $dir =$Parameters->get('serie')['poster_dir'];
+                $fu->upload(
+                    $posterFile,
+                    $serie->getName(),
+                    'uploads/posters/series');
+//                $name=$slugger->slug($serie->getName()).'-'.uniqid().'.'.$posterFile->guessExtension();
+//                $posterFile->move('uploads/posters/series', $name);
+//                $serie->setPoster($name);
             }
 
             if($backdropFile instanceof UploadedFile){
-                $name=$slugger->slug($serie->getName()).'-'.uniqid().'.'.$backdropFile->guessExtension();
-                $backdropFile->move('uploads/backdrops', $name);
-                $serie->setBackdrop($name);
+                $dir =$Parameters->get('serie')['poster_dir'];
+                $fu->upload(
+                    $backdropFile,
+                    $serie->getName(),
+                    'uploads/posters/series');
             }
 
 
@@ -145,6 +155,22 @@ final class SerieController extends AbstractController
         }
 
         return $this->render('serie/edit.html.twig',['serie_form' => $form]);
+    }
+
+    #[Route('/delete/{id}', name: '_delete', requirements: ['id' => '\d+'])]
+    #[IsGranted('ROLE_ADMIN')]
+    public function delete(Serie $serie, EntityManagerInterface $em, Request $request): Response
+    {
+        if ($this->isCsrfTokenValid('delete'.$serie->getId(), $request->get('token'))) {
+            $em->remove($serie);
+            $em->flush();
+
+            $this->addFlash('success', 'La série a été supprimée');
+        } else {
+            $this->addFlash('danger', 'Suppression impossible');
+        }
+
+        return $this->redirectToRoute('serie_list');
     }
 
 

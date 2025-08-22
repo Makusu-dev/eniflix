@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
 use App\Repository\SerieRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -14,6 +15,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\HasLifecycleCallbacks]
 #[ORM\UniqueConstraint( columns: ['name', 'first_air_date'])]
 #[UniqueEntity( fields: ['name', 'firstAirDate'])]
+#[ApiResource]
 class Serie
 {
     #[ORM\Id]
