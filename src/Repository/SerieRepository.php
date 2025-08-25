@@ -34,6 +34,7 @@ class SerieRepository extends ServiceEntityRepository
     }
 
 
+
         public function findSeriesWithDQL(float $popularity, float $vote, int $nbMaxResults, int $offset): array {
             $dql = "SELECT s FROM App\Entity\Serie s WHERE (s.popularity > :popularity) OR s.vote > :vote
                     ORDER BY s.firstAirDate DESC ";

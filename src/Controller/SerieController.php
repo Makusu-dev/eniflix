@@ -32,6 +32,8 @@ final class SerieController extends AbstractController
 //        là on va chercher les infos entrées dans le services.yaml
         $nbPerPage = $parameterBag->get('serie')['nb_max'];
 
+
+
         $offset = ($page - 1) * $nbPerPage;
 
         $criterias = [
